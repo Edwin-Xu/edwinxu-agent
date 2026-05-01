@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "properties": {
+    "tz": {
+      "type": "string",
+      "default": "UTC",
+      "description": "IANA timezone, e.g. Asia/Shanghai"
+    }
+  },
+  "required": []
+}
+

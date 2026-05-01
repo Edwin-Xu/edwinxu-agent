@@ -1,0 +1,9 @@
+name: time
+version: 0.1.0
+description: Time utilities
+tags: [utility]
+tools:
+  - name: time.now
+    description: Get current time in ISO format.
+    input_schema: schemas/time.now.input.json
+    timeout_ms: 2000

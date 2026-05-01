@@ -1,0 +1,35 @@
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# Local env/config
+services/agent-api/.env
+apps/web/.env.local
+
+# Data/artifacts
+data/sqlite/*.db
+data/sqlite/*.db-wal
+data/sqlite/*.db-shm
+data/sqlite/*.db-journal
+artifacts/traces/
+
+# Node
+node_modules/
+apps/web/.next/
+apps/web/out/
+apps/web/.turbo/
+apps/web/.npm-cache/
+services/mcp-servers/**/.npm-cache/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python packaging artifacts
+*.egg-info/
+

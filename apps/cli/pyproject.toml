@@ -1,0 +1,14 @@
+[project]
+name = "edwinxu-agent-cli"
+version = "0.1.0"
+description = "CLI for edwinxu-agent"
+requires-python = ">=3.10"
+dependencies = ["typer", "httpx", "python-dotenv"]
+
+[project.scripts]
+eag = "agent_cli.cli:app"
+
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+

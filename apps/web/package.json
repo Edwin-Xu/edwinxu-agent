@@ -1,0 +1,26 @@
+{
+  "name": "edwinxu-agent-web",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "react-markdown": "latest",
+    "rehype-raw": "latest",
+    "rehype-sanitize": "latest",
+    "remark-gfm": "latest",
+    "typescript": "latest"
+  }
+}
+

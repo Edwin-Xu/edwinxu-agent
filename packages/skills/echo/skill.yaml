@@ -1,0 +1,10 @@
+name: echo
+version: 0.1.0
+description: Debug echo tools
+tags: [utility, debug]
+tools:
+  - name: echo.say
+    description: Echo back input text.
+    input_schema: schemas/echo.say.input.json
+    timeout_ms: 2000
+
