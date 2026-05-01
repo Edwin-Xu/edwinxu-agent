@@ -391,166 +391,172 @@ export default function Page() {
 
   return (
     <div className="layout">
-      <div className="panel" style={{ display: "grid", gridTemplateRows: "54px 1fr" }}>
-        <div className="panelHeader">
-          <div style={{ fontWeight: 700 }}>会话</div>
-          <div className="row" style={{ gap: 8 }}>
-            <button className="btn" onClick={() => createNewSession().catch(console.error)}>
-              新建会话
-            </button>
-            <span className="badge">{sessionsLoading ? "加载中…" : sessionId ? "就绪" : "创建中…"}</span>
+      <div className="leftCol">
+        <div className="panel panelFill">
+          <div className="panelHeader">
+            <div style={{ fontWeight: 700 }}>会话</div>
+            <div className="row" style={{ gap: 8 }}>
+              <button className="btn" onClick={() => createNewSession().catch(console.error)}>
+                新建会话
+              </button>
+              <span className="badge">{sessionsLoading ? "加载中…" : sessionId ? "就绪" : "创建中…"}</span>
+            </div>
           </div>
-        </div>
-        <div className="panelBody" style={{ padding: 0 }}>
-          <div style={{ height: "100%", display: "grid", gridTemplateRows: "1fr 1fr", minHeight: 0 }}>
-            <div style={{ padding: "12px 14px", overflow: "auto", minHeight: 0 }}>
-              <div className="muted small" style={{ marginBottom: 8 }}>
-                会话列表
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                {sessions.length === 0 ? <div className="muted small">暂无会话</div> : null}
-                {sessions.map((s) => {
-                  const active = s.id === sessionId;
-                  const title = (s.title ?? "").trim() || "未命名会话";
-                  return (
-                    <div
-                      key={s.id}
-                      className="row"
-                      style={{
-                        justifyContent: "space-between",
-                        padding: "8px 10px",
-                        borderRadius: 12,
-                        border: `1px solid var(--border)`,
-                        background: active ? "color-mix(in srgb, var(--btn-bg), transparent 40%)" : "transparent",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => setActiveSession(s.id)}
-                      title={s.id}
-                    >
-                      <div style={{ display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>
-                        <div style={{ fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{title}</div>
-                        <div className="muted small" style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" }}>
-                          {s.id}
-                        </div>
-                      </div>
-                      <button
-                        className="btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          deleteSessionById(s.id).catch(console.error);
+          <div className="panelBody" style={{ padding: 0, minHeight: 0 }}>
+            <div style={{ height: "100%", display: "grid", gridTemplateRows: "1fr 1fr", minHeight: 0 }}>
+              <div style={{ padding: "12px 14px", overflow: "auto", minHeight: 0 }}>
+                <div className="muted small" style={{ marginBottom: 8 }}>
+                  会话列表
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  {sessions.length === 0 ? <div className="muted small">暂无会话</div> : null}
+                  {sessions.map((s) => {
+                    const active = s.id === sessionId;
+                    const title = (s.title ?? "").trim() || "未命名会话";
+                    return (
+                      <div
+                        key={s.id}
+                        className="row"
+                        style={{
+                          justifyContent: "space-between",
+                          padding: "8px 10px",
+                          borderRadius: 12,
+                          border: `1px solid var(--border)`,
+                          background: active ? "color-mix(in srgb, var(--btn-bg), transparent 40%)" : "transparent",
+                          cursor: "pointer",
                         }}
+                        onClick={() => setActiveSession(s.id)}
+                        title={s.id}
                       >
-                        删除
-                      </button>
-                    </div>
-                  );
-                })}
+                        <div style={{ display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>
+                          <div style={{ fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{title}</div>
+                          <div className="muted small" style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" }}>
+                            {s.id}
+                          </div>
+                        </div>
+                        <button
+                          className="btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteSessionById(s.id).catch(console.error);
+                          }}
+                        >
+                          删除
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div style={{ padding: "12px 14px", overflow: "auto", borderTop: "1px solid var(--border)", minHeight: 0 }}>
+                <div className="kv">
+                  <div className="muted">会话 ID</div>
+                  <div style={{ wordBreak: "break-all" }}>{sessionId || "-"}</div>
+                  <div className="muted">追踪 ID</div>
+                  <div style={{ wordBreak: "break-all" }}>{traceId || "-"}</div>
+                  <div className="muted">状态</div>
+                  <div>{state}</div>
+                </div>
+                <div style={{ height: 12 }} />
+                <div style={{ fontWeight: 700, marginBottom: 8 }}>会话配置</div>
+                <div className="row" style={{ gap: 8, marginBottom: 8, flexWrap: "wrap" }}>
+                  <button
+                    className="btn"
+                    onClick={() => {
+                      const all = skills.map((s) => s.name);
+                      setSkillsAllow(all);
+                    }}
+                  >
+                    全选技能
+                  </button>
+                  <button className="btn" onClick={() => setSkillsAllow([])}>
+                    清空允许列表
+                  </button>
+                  <button className="btn" onClick={() => refreshSkills().catch(console.error)}>
+                    刷新技能
+                  </button>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {skills.length === 0 ? <div className="muted small">技能加载中…</div> : null}
+                  {skills.map((s) => {
+                    const checked = skillsAllow.includes(s.name);
+                    return (
+                      <label key={s.name} className="row" style={{ justifyContent: "space-between" }}>
+                        <span style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" }}>{s.name}</span>
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={(e) => {
+                            const on = e.target.checked;
+                            setSkillsAllow((prev) => {
+                              const set = new Set(prev);
+                              if (on) set.add(s.name);
+                              else set.delete(s.name);
+                              return Array.from(set);
+                            });
+                          }}
+                        />
+                      </label>
+                    );
+                  })}
+                </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div style={{ padding: "12px 14px", overflow: "auto", borderTop: "1px solid var(--border)", minHeight: 0 }}>
-
-          <div className="kv">
-            <div className="muted">会话 ID</div>
-            <div style={{ wordBreak: "break-all" }}>{sessionId || "-"}</div>
-            <div className="muted">追踪 ID</div>
-            <div style={{ wordBreak: "break-all" }}>{traceId || "-"}</div>
-            <div className="muted">状态</div>
-            <div>{state}</div>
+        <div className="panel panelFill">
+          <div className="panelHeader">
+            <div style={{ fontWeight: 700 }}>MCP 配置</div>
+            <div className="row" style={{ gap: 8 }}>
+              <button className="btn" onClick={() => refreshMcp().catch(console.error)}>
+                刷新
+              </button>
+              <button className="btn" onClick={() => resetMcpFormForCreate()}>
+                新增
+              </button>
+              <span className="badge">{mcpServers.length}</span>
+            </div>
           </div>
-          <div style={{ height: 12 }} />
-          <div style={{ fontWeight: 700, marginBottom: 8 }}>会话配置</div>
-          <div className="row" style={{ gap: 8, marginBottom: 8, flexWrap: "wrap" }}>
-            <button
-              className="btn"
-              onClick={() => {
-                const all = skills.map((s) => s.name);
-                setSkillsAllow(all);
-              }}
-            >
-              全选技能
-            </button>
-            <button className="btn" onClick={() => setSkillsAllow([])}>
-              清空允许列表
-            </button>
-            <button className="btn" onClick={() => refreshSkills().catch(console.error)}>
-              刷新技能
-            </button>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {skills.length === 0 ? <div className="muted small">技能加载中…</div> : null}
-            {skills.map((s) => {
-              const checked = skillsAllow.includes(s.name);
-              return (
-                <label key={s.name} className="row" style={{ justifyContent: "space-between" }}>
-                  <span style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" }}>{s.name}</span>
-                  <input
-                    type="checkbox"
-                    checked={checked}
-                    onChange={(e) => {
-                      const on = e.target.checked;
-                      setSkillsAllow((prev) => {
-                        const set = new Set(prev);
-                        if (on) set.add(s.name);
-                        else set.delete(s.name);
-                        return Array.from(set);
-                      });
-                    }}
-                  />
-                </label>
-              );
-            })}
-          </div>
-
-          <div style={{ height: 16 }} />
-          <div style={{ fontWeight: 700, marginBottom: 8 }}>MCP 服务</div>
-          <div className="row" style={{ gap: 8, marginBottom: 8, flexWrap: "wrap" }}>
-            <button className="btn" onClick={() => refreshMcp().catch(console.error)}>
-              刷新 MCP
-            </button>
-            <button className="btn" onClick={() => resetMcpFormForCreate()}>
-              新增 MCP 服务
-            </button>
-          </div>
-          {mcpServers.length === 0 ? <div className="muted small">暂无 MCP 服务（当前仅管理配置；工具接入后续实现）。</div> : null}
-          <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 12 }}>
-            {mcpServers.map((s) => (
-              <div key={s.name} className="row" style={{ justifyContent: "space-between" }}>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <div style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" }}>{s.name}</div>
-                  <div className="muted small">
-                    {s.transport} · {s.enabled ? "已启用" : "已禁用"}
+          <div className="panelBodyScroll">
+            {mcpServers.length === 0 ? <div className="muted small">暂无 MCP 服务</div> : null}
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {mcpServers.map((s) => (
+                <div key={s.name} className="row" style={{ justifyContent: "space-between" }}>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <div style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" }}>{s.name}</div>
+                    <div className="muted small">
+                      {s.transport} · {s.enabled ? "已启用" : "已禁用"}
+                    </div>
+                  </div>
+                  <div className="row" style={{ gap: 8 }}>
+                    <button className="btn" onClick={() => openMcpFormForEdit(s)}>
+                      编辑
+                    </button>
+                    <button
+                      className="btn"
+                      onClick={async () => {
+                        await fetch(`${base}/v1/mcp/servers/${encodeURIComponent(s.name)}:${s.enabled ? "disable" : "enable"}`, {
+                          method: "POST",
+                        });
+                        await refreshMcp();
+                      }}
+                    >
+                      {s.enabled ? "禁用" : "启用"}
+                    </button>
+                    <button
+                      className="btn"
+                      onClick={async () => {
+                        await fetch(`${base}/v1/mcp/servers/${encodeURIComponent(s.name)}`, { method: "DELETE" });
+                        await refreshMcp();
+                      }}
+                    >
+                      删除
+                    </button>
                   </div>
                 </div>
-                <div className="row" style={{ gap: 8 }}>
-                  <button className="btn" onClick={() => openMcpFormForEdit(s)}>
-                    编辑
-                  </button>
-                  <button
-                    className="btn"
-                    onClick={async () => {
-                      await fetch(`${base}/v1/mcp/servers/${encodeURIComponent(s.name)}:${s.enabled ? "disable" : "enable"}`, {
-                        method: "POST",
-                      });
-                      await refreshMcp();
-                    }}
-                  >
-                    {s.enabled ? "禁用" : "启用"}
-                  </button>
-                  <button
-                    className="btn"
-                    onClick={async () => {
-                      await fetch(`${base}/v1/mcp/servers/${encodeURIComponent(s.name)}`, { method: "DELETE" });
-                      await refreshMcp();
-                    }}
-                  >
-                    删除
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-
+              ))}
             </div>
           </div>
         </div>

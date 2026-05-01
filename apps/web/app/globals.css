@@ -67,6 +67,25 @@ pre {
   padding: 12px;
 }
 
+.leftCol {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 12px;
+}
+
+.panelFill {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 54px 1fr;
+}
+
+.panelBodyScroll {
+  min-height: 0;
+  overflow: auto;
+  padding: 12px 14px;
+}
+
 .panel {
   background: var(--panel-bg);
   border: 1px solid var(--border);
