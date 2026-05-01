@@ -225,6 +225,15 @@ html[data-theme="dark"] .modalBackdrop {
   color: var(--muted);
 }
 
+.tag {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--panel-bg), transparent 20%);
+  color: var(--muted);
+}
+
 .kv {
   display: grid;
   grid-template-columns: 120px 1fr;

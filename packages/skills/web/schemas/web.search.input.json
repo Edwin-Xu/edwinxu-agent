@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "properties": {
+    "query": {
+      "type": "string",
+      "description": "Search query.",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "top_k": {
+      "type": "integer",
+      "description": "Maximum number of results to return (1-10).",
+      "minimum": 1,
+      "maximum": 10,
+      "default": 5
+    },
+    "site": {
+      "type": "string",
+      "description": "Optional site filter, e.g. example.com",
+      "minLength": 1,
+      "maxLength": 200
+    }
+  },
+  "required": ["query"]
+}
+

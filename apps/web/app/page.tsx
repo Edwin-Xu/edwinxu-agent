@@ -43,6 +43,7 @@ export default function Page() {
   const [sessionsLoading, setSessionsLoading] = useState(false);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [skillsAllow, setSkillsAllow] = useState<string[]>([]);
+  const [skillTagFilter, setSkillTagFilter] = useState<string>("all");
   const [mcpServers, setMcpServers] = useState<McpServer[]>([]);
   const [newMcp, setNewMcp] = useState<McpServer>({
     name: "",
@@ -200,6 +201,20 @@ export default function Page() {
       // ignore
     }
   }, [skillsAllow]);
+
+  const allSkillTags = useMemo(() => {
+    const set = new Set<string>();
+    for (const s of skills) {
+      for (const t of s.tags ?? []) set.add(String(t));
+    }
+    return Array.from(set).sort();
+  }, [skills]);
+
+  const visibleSkills = useMemo(() => {
+    if (skillTagFilter === "all") return skills;
+    if (skillTagFilter === "untagged") return skills.filter((s) => (s.tags ?? []).length === 0);
+    return skills.filter((s) => (s.tags ?? []).includes(skillTagFilter));
+  }, [skills, skillTagFilter]);
 
   useEffect(() => {
     if (!sessionId) return;
@@ -477,13 +492,32 @@ export default function Page() {
                     刷新技能
                   </button>
                 </div>
+                <div className="row" style={{ gap: 8, marginBottom: 10, alignItems: "center" }}>
+                  <span className="muted small">TAG</span>
+                  <select className="input" style={{ padding: "8px 10px" }} value={skillTagFilter} onChange={(e) => setSkillTagFilter(e.target.value)}>
+                    <option value="all">全部</option>
+                    <option value="untagged">无 tag</option>
+                    {allSkillTags.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {skills.length === 0 ? <div className="muted small">技能加载中…</div> : null}
-                  {skills.map((s) => {
+                  {visibleSkills.map((s) => {
                     const checked = skillsAllow.includes(s.name);
                     return (
                       <label key={s.name} className="row" style={{ justifyContent: "space-between" }}>
-                        <span style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" }}>{s.name}</span>
+                        <span style={{ display: "flex", gap: 8, alignItems: "center", minWidth: 0 }}>
+                          <span style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" }}>{s.name}</span>
+                          {(s.tags ?? []).slice(0, 2).map((t) => (
+                            <span key={t} className="tag">
+                              {t}
+                            </span>
+                          ))}
+                        </span>
                         <input
                           type="checkbox"
                           checked={checked}

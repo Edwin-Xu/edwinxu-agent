@@ -1,0 +1,10 @@
+name: web
+version: 0.1.0
+description: Web search tools
+tags: [utility, web]
+tools:
+  - name: web.search
+    description: Search the public web for relevant pages.
+    input_schema: schemas/web.search.input.json
+    timeout_ms: 15000
+
