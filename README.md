@@ -14,6 +14,48 @@
 - **`packages/skills`（Skills/Tools）**：内置技能包（如 `time` / `echo`），后端启动时加载并映射为可调用 tools。
 - **（可选）MCP servers**：外部工具服务/进程，通过 `agent-api` 作为 MCP client 接入，并将 MCP tools 映射为 `mcp.<server>.<tool>`。
 
+### 架构总览图
+
+```mermaid
+flowchart LR
+  %% Clients
+  subgraph Clients[客户端]
+    Web[apps/web\nWeb UI (Next.js)]
+    CLI[apps/cli\nCLI (Typer)]
+  end
+
+  %% Core API
+  subgraph Host[services/agent-api\nAgent API (FastAPI)]
+    API[HTTP API]
+    SSE[SSE 事件流\n/v1/sessions/{id}/events]
+    Orchestrator[对话编排\n(模型调用 + 工具调用)]
+    Skills[Skills Registry\npackages/skills/*]
+    MCPClient[MCP Connector\n(可选)]
+  end
+
+  %% Storage
+  subgraph Storage[存储]
+    DB[(SQLite\nsessions/messages/tool_calls/runs/mcp_servers)]
+  end
+
+  %% External
+  subgraph External[外部依赖]
+    LLM[LLM Provider\nAnthropic / Mock]
+    MCPServers[MCP Servers\nstdio / http (可选)]
+  end
+
+  Web -->|HTTP| API
+  CLI -->|HTTP| API
+  Web <-->|SSE| SSE
+
+  API --> Orchestrator
+  Orchestrator --> DB
+  Orchestrator -->|请求/响应| LLM
+  Orchestrator --> Skills
+  Orchestrator --> MCPClient
+  MCPClient --> MCPServers
+```
+
 ### 数据流（一次对话）
 1. Web/CLI `POST /v1/sessions/{session_id}/messages`
 2. 后端写入 `messages`（SQLite），并开始本轮运行
