@@ -20,28 +20,28 @@
 flowchart LR
   %% Clients
   subgraph Clients[客户端]
-    Web[apps/web\nWeb UI (Next.js)]
-    CLI[apps/cli\nCLI (Typer)]
+    Web["apps/web<br/>Web UI（Next.js）"]
+    CLI["apps/cli<br/>CLI（Typer）"]
   end
 
   %% Core API
-  subgraph Host[services/agent-api\nAgent API (FastAPI)]
-    API[HTTP API]
-    SSE[SSE 事件流\n/v1/sessions/{id}/events]
-    Orchestrator[对话编排\n(模型调用 + 工具调用)]
-    Skills[Skills Registry\npackages/skills/*]
-    MCPClient[MCP Connector\n(可选)]
+  subgraph Host["services/agent-api<br/>Agent API（FastAPI）"]
+    API["HTTP API"]
+    SSE["SSE 事件流<br/>/v1/sessions/:id/events"]
+    Orchestrator["对话编排<br/>（模型调用 + 工具调用）"]
+    Skills["Skills Registry<br/>packages/skills/*"]
+    MCPClient["MCP Connector<br/>（可选）"]
   end
 
   %% Storage
   subgraph Storage[存储]
-    DB[(SQLite\nsessions/messages/tool_calls/runs/mcp_servers)]
+    DB[("SQLite<br/>sessions/messages/tool_calls/runs/mcp_servers")]
   end
 
   %% External
   subgraph External[外部依赖]
-    LLM[LLM Provider\nAnthropic / Mock]
-    MCPServers[MCP Servers\nstdio / http (可选)]
+    LLM["LLM Provider<br/>Anthropic / Mock"]
+    MCPServers["MCP Servers<br/>stdio / http（可选）"]
   end
 
   Web -->|HTTP| API
